@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Header from "./components/Header";
+import PathwaysButton from "./components/PathwaysButton";
+
+// import images for the pathways buttons
+import womenPathwayImg from '../../public/womens_thumbnail.jpg'
+import menPathwayImg from '../../public/mens_thumbnail.jpeg'
 
 const MapComponent = dynamic(() => import("@/components/MapComponent"), {
   ssr: false,
@@ -22,11 +27,27 @@ interface Organization {
   MaxAge: number;
 }
 
+interface PathwaysFilterState {
+  [key: string]: boolean;
+}
+
 export default function Home() {
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [activeFilters, setActiveFilters] = useState<PathwaysFilterState>({
+    women: false,
+    men: false,
+    kids: false,
+  });
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const toggleFilter = (filterName: string) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      [filterName]: !prev[filterName]
+    }));
+  };
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -56,7 +77,24 @@ export default function Home() {
       <Header />
       <main className="flex flex-1 w-full flex-col items-start justify-start py-32 px-16 bg-white">
         <div className="flex flex-col items-start max-w-3xl w-full">
-          {/* View Toggle Buttons */}
+          {/* Pathways Filter Buttons */}
+          <div className="flex gap-4 mb-6">
+            <PathwaysButton
+              label="Women"
+              imageSrc={womenPathwayImg.src}
+              isActive={activeFilters.women}
+              onToggle={() => toggleFilter("women")}
+            />
+            <PathwaysButton
+              label="Men"
+              imageSrc={menPathwayImg.src}
+              isActive={activeFilters.men}
+              onToggle={() => toggleFilter("men")}
+            />
+          </div>
+
+          {/* View Toggle Buttons Zone */}
+
           <div className="flex gap-4 mb-6">
             <button
               onClick={() => setViewMode("map")}
