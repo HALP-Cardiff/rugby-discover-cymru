@@ -5,7 +5,6 @@ header {
   display: flex;
   justify-content: space-between;  
   align-items: center;
-  height: 100px;
   box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
 }
 
@@ -15,7 +14,9 @@ header {
   font-family: var(--font-choplin);
 }
 
-.headerImage {
-  height: 52px;
+.header-logo {
+  height: 90px;
+  margin-left: 10px;
+  margin-right: 10px;
   border-radius: 50%;
 }
