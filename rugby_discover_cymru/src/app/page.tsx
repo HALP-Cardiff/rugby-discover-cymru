@@ -9,6 +9,8 @@ import PathwaysButton from "./components/PathwaysButton";
 // import images for the pathways buttons
 import womenPathwayImg from '../../public/womens_thumbnail.jpg'
 import menPathwayImg from '../../public/mens_thumbnail.jpeg'
+import "./globals.css";
+import Footer from "./components/Footer";
 
 const MapComponent = dynamic(() => import("@/components/MapComponent"), {
   ssr: false,
@@ -118,67 +120,66 @@ export default function Home() {
             </button>
           </div>
 
-          {viewMode === "map" && (
-            <div className="w-full" style={{ minHeight: "500px", height: "65vh" }}>
-              {loading ? (
-                <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
-                  Loading organizations...
-                </div>
-              ) : error ? (
-                <div className="w-full h-full bg-red-100 rounded-lg flex items-center justify-center text-red-700">
-                  {error}
-                </div>
-              ) : organizations.length === 0 ? (
-                <div className="w-full h-full bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-700">
-                  No organizations found with location data
-                </div>
-              ) : (
-                <MapComponent organizations={organizations} />
-              )}
-            </div>
-          )}
+            {viewMode === "map" && (
+              <div className="w-full" style={{ minHeight: "500px", height: "65vh" }}>
+                {loading ? (
+                  <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                    Loading organizations...
+                  </div>
+                ) : error ? (
+                  <div className="w-full h-full bg-red-100 rounded-lg flex items-center justify-center text-red-700">
+                    {error}
+                  </div>
+                ) : organizations.length === 0 ? (
+                  <div className="w-full h-full bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-700">
+                    No organizations found with location data
+                  </div>
+                ) : (
+                  <MapComponent organizations={organizations} />
+                )}
+              </div>
+            )}
 
-          {viewMode === "list" && (
-            <div className="w-full h-96 overflow-y-auto">
-              {loading ? (
-                <div className="text-center text-gray-600">
-                  Loading organizations...
-                </div>
-              ) : error ? (
-                <div className="text-center text-red-600">{error}</div>
-              ) : organizations.length === 0 ? (
-                <div className="text-center text-yellow-600">
-                  No organizations found
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {organizations.map((org, index) => (
-                    <Link key={`${org.Id}-${org.OrganisationName}-${index}`} href={`/org/${org.Id}`}>
-                      <div className="p-4 bg-gray-100 rounded-lg border border-gray-300 hover:bg-gray-200 cursor-pointer transition-colors">
-                        <p className="font-semibold text-gray-800">
-                          {org.OrganisationName}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          Team: {org.TeamTemplateName}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          Age Range: {org.MinAge} - {org.MaxAge}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+            {viewMode === "list" && (
+              <div className="w-full h-96 overflow-y-auto">
+                {loading ? (
+                  <div className="text-center text-gray-600">
+                    Loading organizations...
+                  </div>
+                ) : error ? (
+                  <div className="text-center text-red-600">{error}</div>
+                ) : organizations.length === 0 ? (
+                  <div className="text-center text-yellow-600">
+                    No organizations found
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {organizations.map((org, index) => (
+                      <Link key={`${org.Id}-${org.OrganisationName}-${index}`} href={`/org/${org.Id}`}>
+                        <div className="p-4 bg-gray-100 rounded-lg border border-gray-300 hover:bg-gray-200 cursor-pointer transition-colors">
+                          <p className="font-semibold text-gray-800">
+                            {org.OrganisationName}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Team: {org.TeamTemplateName}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Age Range: {org.MinAge} - {org.MaxAge}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="w-64 bg-gray-200 p-4 rounded-lg h-fit">
+            <h2 className="text-lg font-semibold text-gray-700">Filters</h2>
+          </div>
       </main>
-      <button
-        className="fixed bottom-4 right-4 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
-        onClick={() => (window.location.href = "/club_page")}
-      >
-        Club page
-      </button>
+      <Footer />
     </div>
   );
 }
