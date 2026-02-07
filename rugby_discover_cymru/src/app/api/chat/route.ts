@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { getTopOrganisations } from "../../../lib/getTopOrganisations.ts";
+
 
 type Step = "AGE" | "EXPERIENCE" | "FITNESS" | "INTERESTS" | "AVAILABILITY" | "DONE";
 type Role = "user" | "assistant";
@@ -164,12 +166,33 @@ export async function POST(req: NextRequest) {
     case "AVAILABILITY": {
       session.answers.availability = text || session.answers.availability;
       session.step = "DONE";
+
+      let names: string[] = [];
+
+      try {
+        names = await getTopOrganisations();
+      } catch (e) {
+        session.messages.push({
+          role: "assistant",
+          content: "Sorry — I couldn’t fetch organisations from the database.",
+        });
+        break;
+      }
+
+      const reply = [
+        "Here are some recommended clubs:",
+        "",
+        ...names.map((n, i) => `${i + 1}. ${n}`),
+      ].join("\n");
+
       session.messages.push({
         role: "assistant",
-        content: recommend(session.answers),
+        content: reply,
       });
+
       break;
     }
+
 
     case "DONE": {
       session.messages.push({
