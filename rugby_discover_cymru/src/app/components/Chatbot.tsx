@@ -16,18 +16,13 @@ function toUiMessages(apiMessages: ApiMsg[]): UiMsg[] {
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
-
-  // UI messages rendered in the panel
   const [messages, setMessages] = useState<UiMsg[]>([
     { from: "bot", text: "Hi — how can I help you today?" },
   ]);
 
-  // quick reply chips from backend (per step)
   const [quickReplies, setQuickReplies] = useState<string[]>([]);
-
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-
   const panelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -41,12 +36,8 @@ export default function Chatbot() {
     return () => window.removeEventListener("click", handleClick);
   }, [open]);
 
-  // When the chat opens for the first time, initialize the backend conversation
   useEffect(() => {
     if (!open) return;
-
-    // If we already loaded real backend messages, don't re-init
-    // (You can remove this check if you want to always re-sync on open.)
     const alreadyInitialized =
       messages.length > 1 || (messages.length === 1 && messages[0]?.text !== "Hi — how can I help you today?");
     if (alreadyInitialized) return;
@@ -57,7 +48,6 @@ export default function Chatbot() {
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          // important: include cookies (default in same-origin fetch, but explicit is fine)
           credentials: "include",
           body: JSON.stringify({ message: "" }),
         });
@@ -76,14 +66,12 @@ export default function Chatbot() {
         setLoading(false);
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   async function send(text: string) {
     const trimmed = text.trim();
     if (!trimmed) return;
 
-    // optimistic user bubble
     setMessages((m) => [...m, { from: "user", text: trimmed }]);
     setInput("");
     setLoading(true);
@@ -100,7 +88,6 @@ export default function Chatbot() {
 
       const data: { messages: ApiMsg[]; quickReplies?: string[] } = await res.json();
 
-      // Replace entire transcript with server truth (prevents duplication / drift)
       setMessages(toUiMessages(data.messages));
       setQuickReplies(data.quickReplies ?? []);
     } catch (err) {
@@ -138,7 +125,6 @@ export default function Chatbot() {
               </div>
             ))}
 
-            {/* Quick replies */}
             {quickReplies.length > 0 && (
               <div className="pt-2 flex flex-wrap gap-2">
                 {quickReplies.map((qr) => (
@@ -177,7 +163,6 @@ export default function Chatbot() {
         </div>
       )}
 
-      {/* Chat toggle image button (always visible) */}
       <button
         onClick={(e) => {
           e.stopPropagation();
