@@ -41,6 +41,26 @@ interface Organization {
   LogoUrl: string | null;
 }
 
+interface PlayNowOpportunity {
+  id: number;
+  organisationName: string;
+  type: "weekend_fixture" | "social_session" | "short_term";
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  lat: number;
+  lng: number;
+  commitment: string;
+  intensity: string;
+  ageRange: string;
+  sex: string;
+  spotsAvailable: number;
+  contactEmail: string;
+  tags: string[];
+}
+
 interface FilterOptions {
   sexes: { Id: number; Value: string }[];
   gameFormats: { Id: number; Value: string }[];
@@ -51,10 +71,15 @@ const LOGO_BASE_URL = "https://public.wru.wales/organisation/logos/";
 
 // ── Component ────────────────────────────────────────────────────────────
 export default function Home() {
-  const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [viewMode, setViewMode] = useState<"map" | "list" | "play_now">("map");
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Play Now state
+  const [playNowOpportunities, setPlayNowOpportunities] = useState<PlayNowOpportunity[]>([]);
+  const [playNowLoading, setPlayNowLoading] = useState(false);
+  const [playNowFilter, setPlayNowFilter] = useState<string>("");
 
   // Filter options (loaded once)
   const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(
@@ -129,6 +154,31 @@ export default function Home() {
   const hasActiveFilters =
     selectedSex || selectedGameFormat || selectedOrgType || minAge || maxAge;
 
+  // ── Fetch Play Now opportunities ──────────────────────────────────────
+  const fetchPlayNow = useCallback(async () => {
+    try {
+      setPlayNowLoading(true);
+      const params = new URLSearchParams();
+      if (playNowFilter) params.set("type", playNowFilter);
+      const qs = params.toString();
+      const url = `/api/play-now${qs ? `?${qs}` : ""}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`API error: ${response.statusText}`);
+      const result = await response.json();
+      setPlayNowOpportunities(result.data || []);
+    } catch (err) {
+      console.error("Error fetching play now opportunities:", err);
+    } finally {
+      setPlayNowLoading(false);
+    }
+  }, [playNowFilter]);
+
+  useEffect(() => {
+    if (viewMode === "play_now") {
+      fetchPlayNow();
+    }
+  }, [viewMode, fetchPlayNow]);
+
   // ── Pathway button toggle (drives the sex filter) ─────────────────
   const getSexId = (sexValue: string): string => {
     const sexOption = filterOptions?.sexes.find(
@@ -140,6 +190,56 @@ export default function Home() {
   const handlePathwayToggle = (sexValue: string) => {
     const sexId = getSexId(sexValue);
     setSelectedSex((prev) => (prev === sexId ? "" : sexId));
+  };
+
+  // ── Play Now helpers ─────────────────────────────────────────────────
+  const getUrgencyLabel = (dateStr: string): string => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const eventDate = new Date(dateStr);
+    eventDate.setHours(0, 0, 0, 0);
+    const diffDays = Math.round(
+      (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    if (diffDays < 0) return "Past";
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Tomorrow";
+    if (diffDays <= 3) return `In ${diffDays} days`;
+    if (diffDays <= 7) return "This week";
+    if (diffDays <= 14) return "Next week";
+    return new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  };
+
+  const getUrgencyColor = (dateStr: string): string => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const eventDate = new Date(dateStr);
+    eventDate.setHours(0, 0, 0, 0);
+    const diffDays = Math.round(
+      (eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    if (diffDays <= 1) return "bg-red-600 text-white";
+    if (diffDays <= 3) return "bg-orange-500 text-white";
+    if (diffDays <= 7) return "bg-yellow-500 text-white";
+    return "bg-blue-500 text-white";
+  };
+
+  const getTypeLabel = (type: string): string => {
+    switch (type) {
+      case "weekend_fixture": return "Weekend Fixture";
+      case "social_session": return "Social / Casual";
+      case "short_term": return "Short-Term Programme";
+      default: return type;
+    }
+  };
+
+  const getTypeColor = (type: string): string => {
+    switch (type) {
+      case "weekend_fixture": return "bg-red-100 text-red-700";
+      case "social_session": return "bg-emerald-100 text-emerald-700";
+      case "short_term": return "bg-violet-100 text-violet-700";
+      default: return "bg-gray-100 text-gray-700";
+    }
   };
 
   // ── Render ───────────────────────────────────────────────────────────
@@ -313,6 +413,20 @@ export default function Home() {
             >
               List
             </button>
+            <button
+              onClick={() => setViewMode("play_now")}
+              className={`px-6 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2 ${
+                viewMode === "play_now"
+                  ? "bg-red-600 text-white"
+                  : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+              }`}
+            >
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+              </span>
+              Play Now
+            </button>
           </div>
 
           {/* ── Map View ─────────────────────────────────────────────── */}
@@ -401,6 +515,153 @@ export default function Home() {
                     </Link>
                   ))}
                 </div>
+              )}
+            </div>
+          )}
+          {/* ── Play Now View ─────────────────────────────────────────── */}
+          {viewMode === "play_now" && (
+            <div className="w-full">
+              {/* Play Now Header */}
+              <div className="mb-6 p-5 bg-gradient-to-r from-red-600 to-red-800 rounded-xl text-white">
+                <h2 className="text-2xl font-bold mb-1">Play Now</h2>
+                <p className="text-red-100 text-sm">
+                  Clubs across Wales are looking for players right now. Find a session, fixture, or programme and get involved — no long-term commitment needed.
+                </p>
+              </div>
+
+              {/* Category Filters */}
+              <div className="flex flex-wrap gap-2 mb-6">
+                {[
+                  { value: "", label: "All Opportunities" },
+                  { value: "weekend_fixture", label: "Weekend Fixtures" },
+                  { value: "social_session", label: "Social & Casual" },
+                  { value: "short_term", label: "Short-Term Programmes" },
+                ].map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => setPlayNowFilter(cat.value)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      playNowFilter === cat.value
+                        ? "bg-red-600 text-white shadow-md"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Opportunities Cards */}
+              {playNowLoading ? (
+                <div className="text-center py-12 text-gray-600">
+                  <div className="animate-spin rounded-full h-8 w-8 border-4 border-red-200 border-t-red-600 mx-auto mb-3" />
+                  Loading opportunities...
+                </div>
+              ) : playNowOpportunities.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  No opportunities found for this category.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[65vh] overflow-y-auto pr-1">
+                  {playNowOpportunities.map((opp) => (
+                    <div
+                      key={opp.id}
+                      className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
+                    >
+                      {/* Card Header */}
+                      <div className="px-4 pt-4 pb-3 flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${getUrgencyColor(opp.date)}`}>
+                              {getUrgencyLabel(opp.date)}
+                            </span>
+                            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${getTypeColor(opp.type)}`}>
+                              {getTypeLabel(opp.type)}
+                            </span>
+                          </div>
+                          <h3 className="font-bold text-gray-900 text-base leading-tight mt-2">
+                            {opp.title}
+                          </h3>
+                          <p className="text-sm text-red-700 font-semibold mt-0.5">
+                            {opp.organisationName}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Card Body */}
+                      <div className="px-4 pb-3 flex-1">
+                        <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+                          {opp.description}
+                        </p>
+                      </div>
+
+                      {/* Card Details */}
+                      <div className="px-4 pb-3 space-y-1.5">
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <span>
+                            {new Date(opp.date).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })} at {opp.time}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          <span className="truncate">{opp.location}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>{opp.commitment}</span>
+                        </div>
+                      </div>
+
+                      {/* Card Footer */}
+                      <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                            {opp.sex}
+                          </span>
+                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                            {opp.ageRange}
+                          </span>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            opp.spotsAvailable <= 3
+                              ? "bg-red-100 text-red-700 font-bold"
+                              : "bg-green-100 text-green-700"
+                          }`}>
+                            {opp.spotsAvailable} spot{opp.spotsAvailable !== 1 ? "s" : ""} left
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* CTA Button */}
+                      <div className="px-4 py-3">
+                        <a
+                          href={`mailto:${opp.contactEmail}?subject=Play Now: ${encodeURIComponent(opp.title)}`}
+                          className="block w-full text-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+                        >
+                          Get Involved
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Result count */}
+              {!playNowLoading && playNowOpportunities.length > 0 && (
+                <p className="mt-4 text-sm text-gray-500">
+                  Showing{" "}
+                  <span className="font-semibold text-gray-700">
+                    {playNowOpportunities.length}
+                  </span>{" "}
+                  opportunit{playNowOpportunities.length !== 1 ? "ies" : "y"}
+                </p>
               )}
             </div>
           )}
