@@ -150,7 +150,7 @@ export default function Home() {
       
       {/* Hero Section - Full Width */}
       <div 
-        className="w-full relative h-80 flex items-center justify-center mb-5"
+        className="w-full relative h-150 flex items-center justify-center mb-5"
         style={{ 
           backgroundImage: "url('/cover.jpg')",
           backgroundSize: "cover",
