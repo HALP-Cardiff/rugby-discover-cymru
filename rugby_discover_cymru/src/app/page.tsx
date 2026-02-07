@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -55,8 +54,8 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans">
       <Header />
-      <main className="flex flex-1 w-full flex-col items-center justify-center py-32 px-16 bg-white">
-        <div className="flex flex-col items-center justify-center max-w-3xl w-full">
+      <main className="flex flex-1 w-full flex-col items-start justify-start py-32 px-16 bg-white">
+        <div className="flex flex-col items-start max-w-3xl w-full">
           {/* View Toggle Buttons */}
           <div className="flex gap-4 mb-6">
             <button
@@ -82,7 +81,7 @@ export default function Home() {
           </div>
 
           {viewMode === "map" && (
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-start h-96">
               {loading ? (
                 <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
                   Loading organizations...
@@ -102,7 +101,7 @@ export default function Home() {
           )}
 
           {viewMode === "list" && (
-            <div className="w-full">
+            <div className="w-full h-96 overflow-y-auto">
               {loading ? (
                 <div className="text-center text-gray-600">
                   Loading organizations...
