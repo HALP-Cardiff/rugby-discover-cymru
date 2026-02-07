@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import Header from "@/app/components/Header";
+
+const LOGO_BASE_URL = "https://public.wru.wales/organisation/logos/";
 
 interface Organization {
   Id: number;
   OrganisationName: string;
+  LogoUrl: string | null;
   TeamTemplateName: string;
   MinAge: number;
   MaxAge: number;
@@ -97,10 +101,23 @@ export default function OrganizationPage() {
             </button>
           </Link>
 
-          {/* Organization Name as Header */}
-          <h1 className="text-4xl font-bold text-gray-800 mb-8">
-            {organization.OrganisationName}
-          </h1>
+          {/* Organization Header with Logo */}
+          <div className="flex items-center gap-6 mb-8">
+            {organization.LogoUrl && (
+              <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden border border-gray-200 bg-white shadow-sm">
+                <Image
+                  src={`${LOGO_BASE_URL}${organization.LogoUrl}`}
+                  alt={`${organization.OrganisationName} logo`}
+                  fill
+                  className="object-contain p-2"
+                  unoptimized
+                />
+              </div>
+            )}
+            <h1 className="text-4xl font-bold text-gray-800">
+              {organization.OrganisationName}
+            </h1>
+          </div>
 
           {/* Organization Details */}
           <div className="bg-gray-50 rounded-lg border border-gray-300 p-8 space-y-6">

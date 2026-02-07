@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 
 // ── Types ────────────────────────────────────────────────────────────────
+const LOGO_BASE_URL = "https://public.wru.wales/organisation/logos/";
+
 interface Organization {
   OrganisationId: number;
   OrganisationName: string;
@@ -13,6 +15,7 @@ interface Organization {
   MaxAge: number;
   GameFormat: string;
   Sex: string | null;
+  LogoUrl: string | null;
 }
 
 interface TeamInfo {
@@ -28,6 +31,7 @@ interface TeamInfo {
 interface GeocodedOrganization {
   name: string;
   orgType: string;
+  logoUrl: string | null;
   lat: number;
   lng: number;
   teams: TeamInfo[];
@@ -141,6 +145,7 @@ export default function MapComponent({ organizations }: MapComponentProps) {
             results.push({
               name,
               orgType: orgs[0]?.OrganisationType ?? "",
+              logoUrl: orgs[0]?.LogoUrl ?? null,
               lat: coords.lat,
               lng: coords.lng,
               teams: orgs.map((o) => ({
@@ -243,14 +248,27 @@ export default function MapComponent({ organizations }: MapComponentProps) {
           )
           .join("");
 
+        const logoHtml = org.logoUrl
+          ? `<img
+               src="${LOGO_BASE_URL}${org.logoUrl}"
+               alt="${org.name} logo"
+               style="width: 48px; height: 48px; object-fit: contain; border-radius: 6px; border: 1px solid #e5e7eb; background: #fff; flex-shrink: 0;"
+             />`
+          : "";
+
         const popupContent = `
           <div style="min-width: 260px; max-width: 340px; padding: 12px; font-family: system-ui, -apple-system, sans-serif;">
-            <h3 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #1f2937;">
-              ${org.name}
-            </h3>
-            <p style="margin: 0 0 10px; font-size: 12px; color: #9ca3af;">
-              ${org.orgType} &middot; ${org.teams.length} team${org.teams.length !== 1 ? "s" : ""}
-            </p>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              ${logoHtml}
+              <div>
+                <h3 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #1f2937;">
+                  ${org.name}
+                </h3>
+                <p style="margin: 0; font-size: 12px; color: #9ca3af;">
+                  ${org.orgType} &middot; ${org.teams.length} team${org.teams.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+            </div>
             <div style="max-height: 200px; overflow-y: auto;">
               ${teamsHtml}
             </div>
