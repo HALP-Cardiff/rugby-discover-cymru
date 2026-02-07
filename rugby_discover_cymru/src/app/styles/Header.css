@@ -12,7 +12,7 @@ header {
 .header-title {
   font-weight: 700;
   font-size: 2rem;
-  font-family: 'Choplin Medium', serif;
+  font-family: var(--font-choplin);
 }
 
 .headerImage {
