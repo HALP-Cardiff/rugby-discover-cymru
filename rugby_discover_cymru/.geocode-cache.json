@@ -1,0 +1,730 @@
+{
+  "Abergavenny RFC": {
+    "lat": 51.82555559999999,
+    "lng": -3.0172222
+  },
+  "Brynithel RFC": {
+    "lat": 51.705212,
+    "lng": -3.14218
+  },
+  "Blaenavon RFC": {
+    "lat": 51.7728809,
+    "lng": -3.0769141
+  },
+  "Blackwood RFC": {
+    "lat": 51.668935,
+    "lng": -3.195787
+  },
+  "Brynmawr RFC": {
+    "lat": 51.7971997,
+    "lng": -3.1721608
+  },
+  "Blaina RFC": {
+    "lat": 51.766823,
+    "lng": -3.159627
+  },
+  "Abercarn RFC": {
+    "lat": 51.64688839999999,
+    "lng": -3.1355215
+  },
+  "Bettws (Newport) RFC": {
+    "lat": 51.608505,
+    "lng": -3.027364
+  },
+  "Bedwas RFC": {
+    "lat": 51.5890856,
+    "lng": -3.2010902
+  },
+  "Abertillery / Blaenau Gwent RFC": {
+    "lat": 51.732161,
+    "lng": -3.135369
+  },
+  "Chepstow RFC": {
+    "lat": 51.6228887,
+    "lng": -2.6719607
+  },
+  "Ebbw Vale RFC": {
+    "lat": 51.777532,
+    "lng": -3.206151
+  },
+  "Fleur de Lys RFC": {
+    "lat": 51.6634373,
+    "lng": -3.222506
+  },
+  "Caldicot RFC": {
+    "lat": 51.58681480000001,
+    "lng": -2.7646976
+  },
+  "Cross Keys RFC": {
+    "lat": 51.6204834,
+    "lng": -3.129997
+  },
+  "Garndiffaith RFC": {
+    "lat": 51.7392458,
+    "lng": -3.0657441
+  },
+  "Croesyceiliog RFC": {
+    "lat": 51.660126,
+    "lng": -3.006269
+  },
+  "Crumlin RFC": {
+    "lat": 51.6789259,
+    "lng": -3.1408465
+  },
+  "Cwmbran RFC": {
+    "lat": 51.6611063,
+    "lng": -3.0196846
+  },
+  "Llanhilleth RFC": {
+    "lat": 51.69859289999999,
+    "lng": -3.1309791
+  },
+  "Canton RFC": {
+    "lat": 51.475352,
+    "lng": -3.2097468
+  },
+  "Cardiff Quins RFC": {
+    "lat": 51.5170063,
+    "lng": -3.240937
+  },
+  "Cardiff University RFC": {
+    "lat": 51.4876561,
+    "lng": -3.179115
+  },
+  "Dinas Powys RFC": {
+    "lat": 51.4313004,
+    "lng": -3.2259046
+  },
+  "RTB (Ebbw Vale) RFC": {
+    "lat": 51.7702529,
+    "lng": -3.2083998
+  },
+  "Barry RFC": {
+    "lat": 51.4228324,
+    "lng": -3.268687
+  },
+  "Cardiff RFC": {
+    "lat": 51.483707,
+    "lng": -3.1680962
+  },
+  "Fairwater RFC": {
+    "lat": 51.4994881,
+    "lng": -3.2501685
+  },
+  "Cardiff Medicals RFC": {
+    "lat": 51.5223083,
+    "lng": -3.2109568
+  },
+  "Cowbridge RFC": {
+    "lat": 51.4644655,
+    "lng": -3.4534742
+  },
+  "Llandaff RFC": {
+    "lat": 51.494617,
+    "lng": -3.2130984
+  },
+  "Glamorgan Wanderers RFC": {
+    "lat": 51.4749321,
+    "lng": -3.2675004
+  },
+  "Llandaff North RFC": {
+    "lat": 51.505679,
+    "lng": -3.226618
+  },
+  "Llanharan RFC": {
+    "lat": 51.536179,
+    "lng": -3.4407914
+  },
+  "Abercynon RFC": {
+    "lat": 51.64751200000001,
+    "lng": -3.3293529
+  },
+  "Cardiff Met RFC": {
+    "lat": 51.4773323,
+    "lng": -3.1676425
+  },
+  "Aberdare RFC": {
+    "lat": 51.7144444,
+    "lng": -3.4433333
+  },
+  "Abercwmboi RFC": {
+    "lat": 51.6942438,
+    "lng": -3.4236149
+  },
+  "Bargoed RFC": {
+    "lat": 51.6858969,
+    "lng": -3.230006
+  },
+  "Llanishen RFC": {
+    "lat": 51.5259028,
+    "lng": -3.1882753
+  },
+  "Cefn Coed RFC": {
+    "lat": 51.7614616,
+    "lng": -3.406246
+  },
+  "Beddau RFC": {
+    "lat": 51.5580122,
+    "lng": -3.3565886
+  },
+  "Brecon RFC": {
+    "lat": 51.9447492,
+    "lng": -3.3859217
+  },
+  "Ferndale RFC": {
+    "lat": 51.662619,
+    "lng": -3.448638
+  },
+  "Gilfach Goch RFC": {
+    "lat": 51.5936291,
+    "lng": -3.4713083
+  },
+  "Gwernyfed RFC": {
+    "lat": 51.9941201,
+    "lng": -3.2368525
+  },
+  "Deri RFC": {
+    "lat": 51.7072219,
+    "lng": -3.2642269
+  },
+  "Cilfynydd RFC": {
+    "lat": 51.6253174,
+    "lng": -3.3172374
+  },
+  "Builth Wells RFC": {
+    "lat": 52.1481827,
+    "lng": -3.4036288
+  },
+  "Caerphilly RFC": {
+    "lat": 51.578829,
+    "lng": -3.218134
+  },
+  "Llantrisant RFC": {
+    "lat": 51.5452975,
+    "lng": -3.3702278
+  },
+  "Llantwit Fardre RFC": {
+    "lat": 51.5647247,
+    "lng": -3.3217697
+  },
+  "Baglan RFC": {
+    "lat": 51.6246776,
+    "lng": -3.811011299999999
+  },
+  "Hirwaun RFC": {
+    "lat": 51.7399162,
+    "lng": -3.5111801
+  },
+  "Aberavon Quins RFC": {
+    "lat": 51.5969422,
+    "lng": -3.7971101
+  },
+  "Bridgend RFC": {
+    "lat": 52.1306607,
+    "lng": -3.7837117
+  },
+  "Bridgend Athletic RFC": {
+    "lat": 51.5014151,
+    "lng": -3.576343
+  },
+  "Aberavon Green Stars RFC": {
+    "lat": 51.5853636,
+    "lng": -3.8008974
+  },
+  "Bridgend Sports Club RFC": {
+    "lat": 51.504286,
+    "lng": -3.576945
+  },
+  "Briton Ferry RFC": {
+    "lat": 51.632119,
+    "lng": -3.824315
+  },
+  "Kenfig Hill RFC": {
+    "lat": 51.533262,
+    "lng": -3.678068
+  },
+  "Cefn Cribbwr RFC": {
+    "lat": 51.53167,
+    "lng": -3.6536933
+  },
+  "Cwmavon RFC": {
+    "lat": 51.61545049999999,
+    "lng": -3.7584495
+  },
+  "Banwen RFC": {
+    "lat": 51.7755702,
+    "lng": -3.6590132
+  },
+  "Alltwen RFC": {
+    "lat": 51.71404829999999,
+    "lng": -3.8443125
+  },
+  "Bryncoch RFC": {
+    "lat": 51.6831569,
+    "lng": -3.8175666
+  },
+  "Birchgrove RFC": {
+    "lat": 51.668166,
+    "lng": -3.881714
+  },
+  "Abercrave RFC": {
+    "lat": 51.801738,
+    "lng": -3.705678
+  },
+  "Glyncorrwg RFC": {
+    "lat": 51.6756477,
+    "lng": -3.6288767
+  },
+  "Heol y Cyw RFC": {
+    "lat": 51.54747580000001,
+    "lng": -3.5224409
+  },
+  "Crynant (Creunant) RFC": {
+    "lat": 51.73104402135692,
+    "lng": -3.735882101946478
+  },
+  "Amman United RFC": {
+    "lat": 51.80525249999999,
+    "lng": -3.917228799999999
+  },
+  "Cwmllynfell RFC": {
+    "lat": 51.7964286,
+    "lng": -3.822039999999999
+  },
+  "Bonymaen RFC": {
+    "lat": 51.64425929999999,
+    "lng": -3.9025732
+  },
+  "Cwmgwrach RFC": {
+    "lat": 51.73443899999999,
+    "lng": -3.6388829
+  },
+  "Dunvant RFC": {
+    "lat": 51.6197035,
+    "lng": -4.033462699999999
+  },
+  "Glynneath RFC": {
+    "lat": 51.74876,
+    "lng": -3.617823
+  },
+  "Cwmtwrch RFC": {
+    "lat": 51.7849693,
+    "lng": -3.8005011
+  },
+  "Ammanford RFC": {
+    "lat": 51.7914077,
+    "lng": -3.996211599999999
+  },
+  "Glais RFC": {
+    "lat": 51.689365,
+    "lng": -3.878138
+  },
+  "Cefneithin RFC": {
+    "lat": 51.7997886,
+    "lng": -4.093055
+  },
+  "Gorseinon RFC": {
+    "lat": 51.66788769999999,
+    "lng": -4.0387597
+  },
+  "Llandovery RFC": {
+    "lat": 51.991129,
+    "lng": -3.8068318
+  },
+  "Gowerton RFC": {
+    "lat": 51.6480279,
+    "lng": -4.042929
+  },
+  "Llangennech RFC": {
+    "lat": 51.6958565,
+    "lng": -4.0835554
+  },
+  "Llandeilo RFC": {
+    "lat": 51.88683340000001,
+    "lng": -4.0017963
+  },
+  "Yr Hendy RFC": {
+    "lat": 51.7123149,
+    "lng": -4.0578148
+  },
+  "Cwmgors RFC": {
+    "lat": 51.7818321,
+    "lng": -3.8784985
+  },
+  "Llandybie RFC": {
+    "lat": 51.81993689999999,
+    "lng": -4.0073591
+  },
+  "Brynamman RFC": {
+    "lat": 51.8080673,
+    "lng": -3.8692491
+  },
+  "Burry Port RFC": {
+    "lat": 51.6850604,
+    "lng": -4.2457293
+  },
+  "Kidwelly RFC": {
+    "lat": 51.73645339999999,
+    "lng": -4.3081092
+  },
+  "Carmarthen Athletic RFC": {
+    "lat": 51.8479614,
+    "lng": -4.328969000000001
+  },
+  "Felinfoel RFC": {
+    "lat": 51.6984576,
+    "lng": -4.145830699999999
+  },
+  "Furnace United RFC": {
+    "lat": 51.6921229,
+    "lng": -4.1654981
+  },
+  "Laugharne RFC": {
+    "lat": 51.769203,
+    "lng": -4.464252
+  },
+  "Bynea RFC": {
+    "lat": 51.674969,
+    "lng": -4.105793
+  },
+  "Carmarthen RFC": {
+    "lat": 51.8575796,
+    "lng": -4.3119032
+  },
+  "Lampeter College RFC": {
+    "lat": 52.1140738,
+    "lng": -4.0775789
+  },
+  "Lampeter Town RFC": {
+    "lat": 52.112903,
+    "lng": -4.078508999999999
+  },
+  "Aberaeron RFC": {
+    "lat": 52.2457133,
+    "lng": -4.2463669
+  },
+  "Cardigan RFC": {
+    "lat": 52.08846459999999,
+    "lng": -4.6544154
+  },
+  "Fishguard and Goodwick RFC": {
+    "lat": 51.9981501,
+    "lng": -4.9906099
+  },
+  "Aberystwyth RFC": {
+    "lat": 52.41530299999999,
+    "lng": -4.08292
+  },
+  "Llanelli Wanderers RFC": {
+    "lat": 51.6870413,
+    "lng": -4.1721379
+  },
+  "Llangwm RFC": {
+    "lat": 51.74711199999999,
+    "lng": -4.91223
+  },
+  "Aberystwyth University": {
+    "lat": 52.4182746,
+    "lng": -4.0638533
+  },
+  "Clwb Rygbi Crymych": {
+    "lat": 51.9737257,
+    "lng": -4.647071500000001
+  },
+  "Bala RFC": {
+    "lat": 52.909911,
+    "lng": -3.601584
+  },
+  "Haverfordwest RFC": {
+    "lat": 51.800475,
+    "lng": -4.971318999999999
+  },
+  "Bangor University RFC": {
+    "lat": 53.22836780000001,
+    "lng": -4.1294373
+  },
+  "Colwyn Bay RFC": {
+    "lat": 53.29318199999999,
+    "lng": -3.72764
+  },
+  "Caernarfon RFC": {
+    "lat": 53.139551,
+    "lng": -4.273911
+  },
+  "Llanidloes RFC": {
+    "lat": 52.4570274,
+    "lng": -3.5256531
+  },
+  "Bangor RFC": {
+    "lat": 53.22739,
+    "lng": -4.129263
+  },
+  "Denbigh (Dinbych) RFC": {
+    "lat": 53.183906,
+    "lng": -3.425002
+  },
+  "Dolgellau RFC": {
+    "lat": 52.7423721,
+    "lng": -3.8854514
+  },
+  "Bethesda RFC": {
+    "lat": 53.1794749,
+    "lng": -4.0612221
+  },
+  "Llandudno RFC": {
+    "lat": 53.324061,
+    "lng": -3.827609
+  },
+  "Llangefni RFC": {
+    "lat": 53.255785,
+    "lng": -4.311402
+  },
+  "COBRA": {
+    "lat": 52.1306607,
+    "lng": -3.7837117
+  },
+  "Bro Ffestiniog RFC": {
+    "lat": 52.9965302,
+    "lng": -3.9438036
+  },
+  "Nant Conwy RFC": {
+    "lat": 53.2498113,
+    "lng": -3.9699805
+  },
+  "Abertysswg Falcons": {
+    "lat": 51.7430236,
+    "lng": -3.2602181
+  },
+  "Bryncethin RFC": {
+    "lat": 51.5480557,
+    "lng": -3.5653507
+  },
+  "Cardiff Rugby": {
+    "lat": 51.483707,
+    "lng": -3.1680962
+  },
+  "Hartridge RFC": {
+    "lat": 52.1306607,
+    "lng": -3.7837117
+  },
+  "Cambrian Welfare RFC": {
+    "lat": 51.6309781,
+    "lng": -3.4774089
+  },
+  "Dragons": {
+    "lat": 52.1306607,
+    "lng": -3.7837117
+  },
+  "Glyncoch RFC": {
+    "lat": 51.62313779999999,
+    "lng": -3.3343117
+  },
+  "Hafodyrynys RFC": {
+    "lat": 51.6843939,
+    "lng": -3.1212546
+  },
+  "Caerleon RFC": {
+    "lat": 51.607993,
+    "lng": -2.959012
+  },
+  "Cardiff Internationals RFC": {
+    "lat": 51.39711819999999,
+    "lng": -3.3428489
+  },
+  "Clwb Rygbi Cymry Caerdydd RFC": {
+    "lat": 51.4912648,
+    "lng": -3.201157
+  },
+  "Mynydd-Y-Garreg RFC": {
+    "lat": 51.7493814,
+    "lng": -4.2809292
+  },
+  "Cardiff Saracens RFC": {
+    "lat": 51.483707,
+    "lng": -3.1680962
+  },
+  "Aberbeeg RFC": {
+    "lat": 51.707356,
+    "lng": -3.1452904
+  },
+  "Girling RFC": {
+    "lat": 52.1306607,
+    "lng": -3.7837117
+  },
+  "Fall Bay RFC ": {
+    "lat": 51.5642735,
+    "lng": -4.2169231
+  },
+  "Beaufort RFC": {
+    "lat": 51.7993503,
+    "lng": -3.2155284
+  },
+  "Menai Bridge RFC": {
+    "lat": 53.222607,
+    "lng": -4.165577
+  },
+  "Cwmcarn United RFC": {
+    "lat": 51.6413726,
+    "lng": -3.1371331
+  },
+  "Cathays RFC": {
+    "lat": 51.4956475,
+    "lng": -3.1803514
+  },
+  "Caerau Ely RFC": {
+    "lat": 51.47280199999999,
+    "lng": -3.2464484
+  },
+  "Benllech RFC": {
+    "lat": 53.32186100000001,
+    "lng": -4.225891
+  },
+  "Abersychan Alexanders RFC": {
+    "lat": 51.724084,
+    "lng": -3.0629
+  },
+  "Llanrumney RFC": {
+    "lat": 51.5224488,
+    "lng": -3.1308388
+  },
+  "Bedwellty RFC": {
+    "lat": 51.697354,
+    "lng": -3.207148
+  },
+  "Llandrindod Wells RFC": {
+    "lat": 52.2409918,
+    "lng": -3.3712023
+  },
+  "Blackwood Stars RFC": {
+    "lat": 51.66424689999999,
+    "lng": -3.1944387
+  },
+  "Cefn Fforest RFC": {
+    "lat": 51.66993799999999,
+    "lng": -3.2113068
+  },
+  "Ferryside RFC": {
+    "lat": 51.7676363,
+    "lng": -4.3690241
+  },
+  "Harlech RFC": {
+    "lat": 52.8592607,
+    "lng": -4.1076858
+  },
+  "Crickhowell RFC": {
+    "lat": 51.8591153,
+    "lng": -3.1371454
+  },
+  "Porthmadog RFC": {
+    "lat": 52.927842,
+    "lng": -4.133384
+  },
+  "Forgeside RFC": {
+    "lat": 51.7722244,
+    "lng": -3.0845854
+  },
+  "Flint RFC": {
+    "lat": 53.248236,
+    "lng": -3.13577
+  },
+  "Abergele RFC": {
+    "lat": 53.2909769,
+    "lng": -3.5826319
+  },
+  "Hollybush RFC": {
+    "lat": 51.7197469,
+    "lng": -3.2114271
+  },
+  "Tregaron RFC": {
+    "lat": 52.2199979,
+    "lng": -3.934385
+  },
+  "Cardiff Chiefs": {
+    "lat": 51.483707,
+    "lng": -3.1680962
+  },
+  "Glamorgan County RFC": {
+    "lat": 51.4443584,
+    "lng": -3.4151166
+  },
+  "Blaenau Gwent Schools": {
+    "lat": 51.7875779,
+    "lng": -3.2043931
+  },
+  "Dragons All-Stars ": {
+    "lat": 52.1306607,
+    "lng": -3.7837117
+  },
+  "Cwmavon/Tondu RFC": {
+    "lat": 51.5416755,
+    "lng": -3.593493899999999
+  },
+  "Dulais Valley RFC": {
+    "lat": 51.73606540000001,
+    "lng": -3.750867
+  },
+  "Cynon Valley Schools": {
+    "lat": 51.657,
+    "lng": -3.461
+  },
+  "Brackla RFC": {
+    "lat": 51.5068219,
+    "lng": -3.5617041
+  },
+  "East District": {
+    "lat": 51.6478897,
+    "lng": -3.900053599999999
+  },
+  "Clwb Rygbi Bro Gwernant": {
+    "lat": 52.9965302,
+    "lng": -3.9438036
+  },
+  "Bridgend Schools": {
+    "lat": 51.504286,
+    "lng": -3.576945
+  },
+  "Dunvant RFC Athletic ": {
+    "lat": 51.6197035,
+    "lng": -4.033462699999999
+  },
+  "Cardiff Schools Central": {
+    "lat": 51.4763347,
+    "lng": -3.1795859
+  },
+  "Islwyn Schools": {
+    "lat": 51.6840809,
+    "lng": -3.1766771
+  },
+  "Denbigh (Dinbych) RFC Athletic": {
+    "lat": 53.183906,
+    "lng": -3.425002
+  },
+  "Clwb Rygbi Crymych RFC Athletic": {
+    "lat": 51.9737257,
+    "lng": -4.647071500000001
+  },
+  "Llangefni RFC Athletic ": {
+    "lat": 53.255785,
+    "lng": -4.311402
+  },
+  "Colwyn Bay RFC Athletic ": {
+    "lat": 53.29318199999999,
+    "lng": -3.72764
+  },
+  "Cardiff Schools West": {
+    "lat": 51.4814584,
+    "lng": -3.1822335
+  },
+  "COBRA Athletic ": {
+    "lat": 52.1306607,
+    "lng": -3.7837117
+  },
+  "Kenfig Hill RFC Athletic": {
+    "lat": 51.533262,
+    "lng": -3.678068
+  },
+  "Cardiff Schools East": {
+    "lat": 51.483707,
+    "lng": -3.1680962
+  }
+}

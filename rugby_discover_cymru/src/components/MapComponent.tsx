@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+"use client";
+
+import { useEffect, useRef, useState, useMemo } from "react";
 
 interface Organization {
   Id: number;
@@ -10,162 +10,312 @@ interface Organization {
   MaxAge: number;
 }
 
-interface OrganizationWithCoords extends Organization {
-  Latitude: number;
-  Longitude: number;
+/** One marker on the map = one unique organisation with all its teams. */
+interface GeocodedOrganization {
+  name: string;
+  lat: number;
+  lng: number;
+  teams: {
+    id: number;
+    teamName: string;
+    minAge: number;
+    maxAge: number;
+  }[];
 }
 
 interface MapComponentProps {
   organizations: Organization[];
 }
 
-// Geocode organization name to coordinates using Nominatim API
-async function geocodeOrganization(
-  orgName: string,
-): Promise<{ lat: number; lon: number } | null> {
-  try {
-    // Add Wales context to improve search accuracy
-    const query = `${orgName}, Wales, UK`;
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
-      {
-        headers: {
-          "User-Agent": "Rugby-Discover-Cymru",
-        },
-      },
-    );
-
-    if (!response.ok) throw new Error("Geocoding failed");
-
-    const data = await response.json();
-    if (data && data.length > 0) {
-      return {
-        lat: parseFloat(data[0].lat),
-        lon: parseFloat(data[0].lon),
-      };
-    }
-    return null;
-  } catch (error) {
-    console.error(`Failed to geocode ${orgName}:`, error);
-    return null;
-  }
-}
-
 export default function MapComponent({ organizations }: MapComponentProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<L.Map | null>(null);
-  const [orgsWithCoords, setOrgsWithCoords] = useState<
-    OrganizationWithCoords[]
-  >([]);
-  const [geocodingProgress, setGeocodingProgress] = useState(0);
+  const map = useRef<google.maps.Map | null>(null);
+  const infoWindow = useRef<google.maps.InfoWindow | null>(null);
+  const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
 
-  // Geocode all organizations on mount
-  useEffect(() => {
-    const geocodeAll = async () => {
-      const results: OrganizationWithCoords[] = [];
+  // Guard against React Strict Mode double-firing the geocode effect
+  const geocodingStarted = useRef(false);
 
-      for (let i = 0; i < organizations.length; i++) {
-        const org = organizations[i];
-        const coords = await geocodeOrganization(org.OrganisationName);
+  const [geocodedOrgs, setGeocodedOrgs] = useState<GeocodedOrganization[]>([]);
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [geocodingStatus, setGeocodingStatus] = useState("");
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-        if (coords) {
-          results.push({
-            ...org,
-            Latitude: coords.lat,
-            Longitude: coords.lon,
-          });
-        }
-
-        setGeocodingProgress(
-          Math.round(((i + 1) / organizations.length) * 100),
-        );
-        // Add delay to respect API rate limits
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-
-      setOrgsWithCoords(results);
-    };
-
-    if (organizations.length > 0) {
-      geocodeAll();
+  // ── Group organisations by name ──────────────────────────────────────
+  // Multiple DB rows may share the same OrganisationName (different teams).
+  // We deduplicate here so we geocode each name once and display one
+  // marker per organisation with all teams listed in the popup.
+  const groupedOrgs = useMemo(() => {
+    const groups = new Map<string, Organization[]>();
+    for (const org of organizations) {
+      const existing = groups.get(org.OrganisationName) || [];
+      existing.push(org);
+      groups.set(org.OrganisationName, existing);
     }
+    return groups;
   }, [organizations]);
 
+  // ── Load Google Maps JavaScript API (once) ───────────────────────────
   useEffect(() => {
-    if (!mapContainer.current || orgsWithCoords.length === 0) return;
+    if (typeof window === "undefined") return;
 
-    // Initialize map
-    if (!map.current) {
-      map.current = L.map(mapContainer.current).setView([52.3555, -3.1107], 7);
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19,
-      }).addTo(map.current);
+    // Already loaded
+    if (window.google?.maps) {
+      setMapLoaded(true);
+      return;
     }
 
-    // Clear existing markers
-    map.current.eachLayer((layer) => {
-      if (layer instanceof L.Marker) {
-        map.current?.removeLayer(layer);
-      }
-    });
+    // Script tag already exists (e.g. from Strict Mode first render) — poll
+    const existingScript = document.querySelector(
+      'script[src*="maps.googleapis.com"]'
+    );
+    if (existingScript) {
+      const check = setInterval(() => {
+        if (window.google?.maps) {
+          setMapLoaded(true);
+          clearInterval(check);
+        }
+      }, 200);
+      // No aggressive timeout — just keep polling until it loads
+      return () => clearInterval(check);
+    }
 
-    // Add markers for each organization
-    orgsWithCoords.forEach((org) => {
-      if (map.current) {
-        const marker = L.marker([org.Latitude, org.Longitude]).addTo(
-          map.current,
+    // First time: inject the script
+    if (!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
+      setError("Google Maps API key is not configured");
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=marker`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setMapLoaded(true);
+    script.onerror = () => setError("Failed to load Google Maps script");
+    document.head.appendChild(script);
+  }, []);
+
+  // ── Batch-geocode all unique organisation names ──────────────────────
+  useEffect(() => {
+    if (organizations.length === 0) return;
+
+    // Prevent React Strict Mode from firing this twice
+    if (geocodingStarted.current) return;
+    geocodingStarted.current = true;
+
+    const uniqueNames = [...groupedOrgs.keys()];
+
+    setIsGeocoding(true);
+    setGeocodingStatus(
+      `Locating ${uniqueNames.length} organisations on the map…`
+    );
+
+    fetch("/api/geocode", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ organizationNames: uniqueNames }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Geocoding API error: ${res.statusText}`);
+        return res.json();
+      })
+      .then((data) => {
+        const results: GeocodedOrganization[] = [];
+
+        for (const [name, coords] of Object.entries(
+          data.results as Record<
+            string,
+            { lat: number; lng: number } | null
+          >
+        )) {
+          if (coords) {
+            const orgs = groupedOrgs.get(name) || [];
+            results.push({
+              name,
+              lat: coords.lat,
+              lng: coords.lng,
+              teams: orgs.map((o) => ({
+                id: o.Id,
+                teamName: o.TeamTemplateName,
+                minAge: o.MinAge,
+                maxAge: o.MaxAge,
+              })),
+            });
+          }
+        }
+
+        setGeocodedOrgs(results);
+        setGeocodingStatus(
+          `Showing ${results.length} of ${uniqueNames.length} organisations`
         );
+      })
+      .catch((err) => {
+        console.error("Batch geocoding error:", err);
+        setError(err instanceof Error ? err.message : "Geocoding failed");
+      })
+      .finally(() => {
+        setIsGeocoding(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organizations]);
+
+  // ── Initialise / update map markers ──────────────────────────────────
+  useEffect(() => {
+    if (!mapContainer.current || geocodedOrgs.length === 0 || !mapLoaded)
+      return;
+
+    try {
+      // Create map instance once
+      if (!map.current) {
+        map.current = new google.maps.Map(mapContainer.current, {
+          center: { lat: 52.13, lng: -3.78 }, // Centre of Wales
+          zoom: 8,
+          mapId: "RUGBY_DISCOVER_CYMRU",
+        });
+        infoWindow.current = new google.maps.InfoWindow();
+      }
+
+      // Clear old markers
+      markersRef.current.forEach((m) => (m.map = null));
+      markersRef.current = [];
+
+      // Add one marker per organisation
+      geocodedOrgs.forEach((org) => {
+        if (!map.current) return;
+
+        // Custom rugby-themed pin
+        const pin = document.createElement("div");
+        pin.innerHTML = `
+          <div style="
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.15s ease;
+          "
+          onmouseover="this.style.transform='scale(1.25)'"
+          onmouseout="this.style.transform='scale(1)'"
+          title="${org.name}"
+          >&#127945;</div>
+        `;
+
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          position: { lat: org.lat, lng: org.lng },
+          map: map.current,
+          content: pin,
+          title: org.name,
+        });
+
+        // Build popup content listing all teams
+        const teamsHtml = org.teams
+          .map(
+            (t) => `
+            <div style="padding: 6px 0; border-bottom: 1px solid #f3f4f6;">
+              <div style="font-size: 13px; font-weight: 500; color: #374151;">${t.teamName}</div>
+              <div style="font-size: 12px; color: #6b7280;">Ages ${t.minAge} – ${t.maxAge}</div>
+            </div>`
+          )
+          .join("");
 
         const popupContent = `
-          <div style="min-width: 200px;">
-            <h3 style="margin: 0 0 8px 0; font-weight: bold;">${org.OrganisationName}</h3>
-            <p style="margin: 4px 0; font-size: 14px;"><strong>Team:</strong> ${org.TeamTemplateName}</p>
-            <p style="margin: 4px 0; font-size: 14px;"><strong>Age Range:</strong> ${org.MinAge} - ${org.MaxAge}</p>
-            <p style="margin: 4px 0; font-size: 12px; color: #666;">Lat: ${org.Latitude.toFixed(4)}, Lon: ${org.Longitude.toFixed(4)}</p>
+          <div style="min-width: 260px; max-width: 340px; padding: 12px; font-family: system-ui, -apple-system, sans-serif;">
+            <h3 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #1f2937;">
+              ${org.name}
+            </h3>
+            <p style="margin: 0 0 10px; font-size: 12px; color: #9ca3af;">
+              ${org.teams.length} team${org.teams.length !== 1 ? "s" : ""}
+            </p>
+            <div style="max-height: 200px; overflow-y: auto;">
+              ${teamsHtml}
+            </div>
           </div>
         `;
 
-        marker.bindPopup(popupContent);
+        marker.addListener("click", () => {
+          infoWindow.current?.setContent(popupContent);
+          infoWindow.current?.open(map.current!, marker);
+        });
+
+        markersRef.current.push(marker);
+      });
+
+      // Fit bounds to all markers
+      if (geocodedOrgs.length > 0 && map.current) {
+        const bounds = new google.maps.LatLngBounds();
+        geocodedOrgs.forEach((org) =>
+          bounds.extend({ lat: org.lat, lng: org.lng })
+        );
+        map.current.fitBounds(bounds, 60);
       }
-    });
-
-    // Fit bounds to all markers if there are any
-    if (orgsWithCoords.length > 0 && map.current) {
-      const bounds = L.latLngBounds(
-        orgsWithCoords.map(
-          (org) => [org.Latitude, org.Longitude] as L.LatLngTuple,
-        ),
-      );
-      map.current.fitBounds(bounds, { padding: [50, 50] });
+    } catch (err) {
+      console.error("Error initializing map:", err);
+      setError("Failed to initialize the map");
     }
-  }, [orgsWithCoords]);
+  }, [geocodedOrgs, mapLoaded]);
 
+  // ── Derived state ────────────────────────────────────────────────────
+  const isLoading = isGeocoding || (!mapLoaded && !error);
+  const isReady = !isGeocoding && mapLoaded && geocodedOrgs.length > 0;
+
+  // ── Render ───────────────────────────────────────────────────────────
   return (
-    <div>
-      {orgsWithCoords.length === 0 && geocodingProgress > 0 && (
-        <div className="w-full h-96 bg-blue-100 rounded-lg flex flex-col items-center justify-center text-blue-700">
-          <p className="mb-4">Geocoding organizations: {geocodingProgress}%</p>
-          <div className="w-48 h-2 bg-blue-300 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-blue-600 transition-all"
-              style={{ width: `${geocodingProgress}%` }}
-            />
-          </div>
+    <div className="w-full h-full min-h-[500px] relative">
+      {/* Map canvas — always rendered so the ref is available */}
+      <div
+        ref={mapContainer}
+        className="w-full h-full min-h-[500px] rounded-lg"
+        style={{ backgroundColor: "#e5e7eb" }}
+      />
+
+      {/* Loading overlay (on top of map container) */}
+      {isLoading && !error && (
+        <div className="absolute inset-0 z-10 bg-white/90 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-red-200 border-t-red-600 mb-4" />
+          <p className="text-gray-700 font-medium">
+            {isGeocoding ? geocodingStatus : "Loading Google Maps…"}
+          </p>
+          {isGeocoding && (
+            <p className="text-sm text-gray-500 mt-1">
+              {groupedOrgs.size} unique organisations to locate
+            </p>
+          )}
         </div>
       )}
-      {orgsWithCoords.length > 0 && (
-        <div
-          ref={mapContainer}
-          style={{
-            width: "100%",
-            height: "600px",
-            borderRadius: "0.5rem",
-            overflow: "hidden",
-          }}
-        />
+
+      {/* Status badge */}
+      {isReady && (
+        <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-md text-sm text-gray-700">
+          <strong>{geocodedOrgs.length}</strong> organisations on map
+        </div>
+      )}
+
+      {/* Error overlay */}
+      {error && (
+        <div className="absolute inset-0 z-20 bg-red-50 rounded-lg flex flex-col items-center justify-center text-red-700 p-6">
+          <svg
+            className="w-10 h-10 mb-3 text-red-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <p className="font-semibold mb-1">Something went wrong</p>
+          <p className="text-sm text-center text-red-600">{error}</p>
+        </div>
       )}
     </div>
   );
