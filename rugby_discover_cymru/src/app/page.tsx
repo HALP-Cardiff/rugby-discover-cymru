@@ -148,12 +148,6 @@ export default function Home() {
             </div>
           </div>
       </main>
-      <button
-        className="fixed bottom-4 right-4 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
-        onClick={() => (window.location.href = "/club_page")}
-      >
-        Club page
-      </button>
     </div>
   );
 }
