@@ -87,7 +87,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Map View */}
           {viewMode === "map" && (
             <div className="w-full flex flex-col items-center">
               {loading ? (
@@ -108,7 +107,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* List View */}
           {viewMode === "list" && (
             <div className="w-full">
               {loading ? (
