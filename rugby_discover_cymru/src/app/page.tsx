@@ -39,12 +39,10 @@ interface Organization {
   LogoUrl: string | null;
 }
 
-<<<<<<< Updated upstream
 interface PathwaysFilterState {
   [key: string]: boolean;
 }
 
-=======
 interface FilterOptions {
   sexes: { Id: number; Value: string }[];
   gameFormats: { Id: number; Value: string }[];
@@ -52,7 +50,6 @@ interface FilterOptions {
 }
 
 // ── Component ────────────────────────────────────────────────────────────
->>>>>>> Stashed changes
 export default function Home() {
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
   const [activeFilters, setActiveFilters] = useState<PathwaysFilterState>({
@@ -64,7 +61,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-<<<<<<< Updated upstream
   const toggleFilter = (filterName: string) => {
     setActiveFilters(prev => ({
       ...prev,
@@ -72,31 +68,10 @@ export default function Home() {
     }));
   };
 
-  useEffect(() => {
-    const fetchOrganizations = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/hello");
-        if (!response.ok) {
-          throw new Error(`API error: ${response.statusText}`);
-        }
-        const result = await response.json();
-        setOrganizations(result.data || []);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch organizations",
-        );
-        console.error("Error fetching organizations:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-=======
   // Filter options (loaded once)
   const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(
     null
   );
->>>>>>> Stashed changes
 
   // Active filter values
   const [selectedSex, setSelectedSex] = useState("");
@@ -171,8 +146,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans">
       <Header />
       <main className="flex flex-1 w-full flex-col items-start justify-start py-32 px-16 bg-white">
-<<<<<<< Updated upstream
-        <div className="flex flex-col items-start max-w-3xl w-full">
+        <div className="flex flex-col items-start w-full max-w-5xl">
           {/* Pathways Filter Buttons */}
           <div className="flex gap-4 mb-6">
             <PathwaysButton
@@ -189,10 +163,6 @@ export default function Home() {
             />
           </div>
 
-          {/* View Toggle Buttons Zone */}
-
-=======
-        <div className="flex flex-col items-start w-full max-w-5xl">
           {/* ── Filters ──────────────────────────────────────────────── */}
           <div className="w-full mb-6 p-5 bg-gray-50 rounded-xl border border-gray-200">
             <div className="flex items-center justify-between mb-4">
@@ -313,7 +283,6 @@ export default function Home() {
           </div>
 
           {/* ── View Toggle ──────────────────────────────────────────── */}
->>>>>>> Stashed changes
           <div className="flex gap-4 mb-6">
             <button
               onClick={() => setViewMode("map")}
@@ -337,66 +306,6 @@ export default function Home() {
             </button>
           </div>
 
-<<<<<<< Updated upstream
-            {viewMode === "map" && (
-              <div className="w-full" style={{ minHeight: "500px", height: "65vh" }}>
-                {loading ? (
-                  <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
-                    Loading organizations...
-                  </div>
-                ) : error ? (
-                  <div className="w-full h-full bg-red-100 rounded-lg flex items-center justify-center text-red-700">
-                    {error}
-                  </div>
-                ) : organizations.length === 0 ? (
-                  <div className="w-full h-full bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-700">
-                    No organizations found with location data
-                  </div>
-                ) : (
-                  <MapComponent organizations={organizations} />
-                )}
-              </div>
-            )}
-
-            {viewMode === "list" && (
-              <div className="w-full h-96 overflow-y-auto">
-                {loading ? (
-                  <div className="text-center text-gray-600">
-                    Loading organizations...
-                  </div>
-                ) : error ? (
-                  <div className="text-center text-red-600">{error}</div>
-                ) : organizations.length === 0 ? (
-                  <div className="text-center text-yellow-600">
-                    No organizations found
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {organizations.map((org, index) => (
-                      <Link key={`${org.Id}-${org.OrganisationName}-${index}`} href={`/org/${org.Id}`}>
-                        <div className="p-4 bg-gray-100 rounded-lg border border-gray-300 hover:bg-gray-200 cursor-pointer transition-colors">
-                          <p className="font-semibold text-gray-800">
-                            {org.OrganisationName}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            Team: {org.TeamTemplateName}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            Age Range: {org.MinAge} - {org.MaxAge}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="w-64 bg-gray-200 p-4 rounded-lg h-fit">
-            <h2 className="text-lg font-semibold text-gray-700">Filters</h2>
-          </div>
-=======
           {/* ── Map View ─────────────────────────────────────────────── */}
           {viewMode === "map" && (
             <div
@@ -472,7 +381,6 @@ export default function Home() {
             </div>
           )}
         </div>
->>>>>>> Stashed changes
       </main>
       <Footer />
     </div>
