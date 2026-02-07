@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
         session.messages.push({
           role: "assistant",
           content:
-            "Great. What’s your availability?\nExample: “Tue/Thu evenings, weekends sometimes”",
+            "Great. What’s your availability?",
         });
         break;
       }
