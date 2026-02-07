@@ -145,7 +145,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans">
       <Header />
-      <main className="flex flex-1 w-full flex-col items-start justify-start py-32 px-16 bg-white">
+      <main className="flex flex-1 w-full flex-col items-start justify-start py-5 px-16 bg-white">
         <div className="flex flex-col items-start w-full max-w-5xl">
           {/* Pathways Filter Buttons */}
           <div className="flex gap-4 mb-6">
