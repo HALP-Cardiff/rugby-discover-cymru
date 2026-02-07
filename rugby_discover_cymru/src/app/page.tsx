@@ -65,6 +65,11 @@ export default function Home() {
           )}
         </div>
       </main>
+      <button 
+        onClick={() => window.location.href = '/club_page'}
+        >
+        Club page
+      </button>
     </div>
   );
 }
