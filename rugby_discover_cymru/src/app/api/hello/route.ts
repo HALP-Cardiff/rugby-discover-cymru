@@ -20,10 +20,15 @@ const dbConfig = {
   },
 };
 
-const QUERY = `SELECT tt.Name AS TeamTemplateName, o.Name AS OrganisationName, o.Id, tt.MinAge, tt.MaxAge FROM dbo.Team_team1 t
+const QUERY = `SELECT 
+  o.Id, 
+  o.Name AS OrganisationName, 
+  tt.Name AS TeamTemplateName, 
+  tt.MinAge, 
+  tt.MaxAge 
+FROM dbo.Team_team1 t
 JOIN dbo.TeamTemplate_team1 tt ON t.TeamTemplateId = tt.Id
-JOIN dbo.Organisation_team1 o ON t.OrganisationId = o.Id
-WHERE o.Id = 12;`;
+JOIN dbo.Organisation_team1 o ON t.OrganisationId = o.Id;`;
 
 export async function GET() {
   let pool: sql.ConnectionPool | undefined;

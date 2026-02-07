@@ -1,15 +1,65 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+
+const MapComponent = dynamic(() => import("@/components/MapComponent"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+      Loading map...
+    </div>
+  ),
+});
+
+interface Organization {
+  Id: number;
+  OrganisationName: string;
+  TeamTemplateName: string;
+  MinAge: number;
+  MaxAge: number;
+}
 
 export default function Home() {
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/hello");
+        if (!response.ok) {
+          throw new Error(`API error: ${response.statusText}`);
+        }
+        const result = await response.json();
+        setOrganizations(result.data || []);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch organizations",
+        );
+        console.error("Error fetching organizations:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrganizations();
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans">
-      <header className="w-full py-12 px-16 shadow-lg" style={{ backgroundColor: "rgb(238, 53, 36)" }}>
-        <h1 className="text-4xl font-bold text-white">Welcome to the WRU Discovery Tool</h1>
+      <header
+        className="w-full py-12 px-16 shadow-lg"
+        style={{ backgroundColor: "rgb(238, 53, 36)" }}
+      >
+        <h1 className="text-4xl font-bold text-white">
+          Welcome to the WRU Discovery Tool
+        </h1>
       </header>
       <main className="flex flex-1 w-full flex-col items-center justify-center py-32 px-16 bg-white">
         <div className="flex flex-col items-center justify-center max-w-3xl w-full">
@@ -40,35 +90,64 @@ export default function Home() {
           {/* Map View */}
           {viewMode === "map" && (
             <div className="w-full flex flex-col items-center">
-              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d19877.117945940747!2d-3.1570815999999997!3d51.48312669999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1770461600485!5m2!1sen!2suk" width="600" height="450" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+              {loading ? (
+                <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+                  Loading organizations...
+                </div>
+              ) : error ? (
+                <div className="w-full h-96 bg-red-100 rounded-lg flex items-center justify-center text-red-700">
+                  {error}
+                </div>
+              ) : organizations.length === 0 ? (
+                <div className="w-full h-96 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-700">
+                  No organizations found with location data
+                </div>
+              ) : (
+                <MapComponent organizations={organizations} />
+              )}
             </div>
           )}
 
           {/* List View */}
           {viewMode === "list" && (
             <div className="w-full">
-              <div className="space-y-3">
-                <div className="p-4 bg-gray-100 rounded-lg border border-gray-300">
-                  <p className="font-semibold text-gray-800">Rugby Club 1</p>
-                  <p className="text-sm text-gray-600">Location details here</p>
+              {loading ? (
+                <div className="text-center text-gray-600">
+                  Loading organizations...
                 </div>
-                <div className="p-4 bg-gray-100 rounded-lg border border-gray-300">
-                  <p className="font-semibold text-gray-800">Rugby Club 2</p>
-                  <p className="text-sm text-gray-600">Location details here</p>
+              ) : error ? (
+                <div className="text-center text-red-600">{error}</div>
+              ) : organizations.length === 0 ? (
+                <div className="text-center text-yellow-600">
+                  No organizations found
                 </div>
-                <div className="p-4 bg-gray-100 rounded-lg border border-gray-300">
-                  <p className="font-semibold text-gray-800">Rugby Club 3</p>
-                  <p className="text-sm text-gray-600">Location details here</p>
+              ) : (
+                <div className="space-y-3">
+                  {organizations.map((org, index) => (
+                    <Link key={`${org.Id}-${org.OrganisationName}-${index}`} href={`/org/${org.Id}`}>
+                      <div className="p-4 bg-gray-100 rounded-lg border border-gray-300 hover:bg-gray-200 cursor-pointer transition-colors">
+                        <p className="font-semibold text-gray-800">
+                          {org.OrganisationName}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Team: {org.TeamTemplateName}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Age Range: {org.MinAge} - {org.MaxAge}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>
       </main>
-      <button 
+      <button
         className="fixed bottom-4 right-4 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
-        onClick={() => window.location.href = '/club_page'}
-        >
+        onClick={() => (window.location.href = "/club_page")}
+      >
         Club page
       </button>
     </div>
