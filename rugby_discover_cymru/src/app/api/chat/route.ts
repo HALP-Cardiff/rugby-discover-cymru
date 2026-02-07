@@ -65,13 +65,15 @@ function normalize(text: string) {
 function recommend(answers: Answers): string {
   const interests = answers.interests?.join(", ") ?? "—";
   return [
-    "Got it. Here’s a starter recommendation:",
+    "Got it. Here're your choices:",
     "",
     `• Age group: ${answers.ageGroup ?? "—"}`,
     `• Experience: ${answers.experience ?? "—"}`,
     `• Fitness: ${answers.fitness ?? "—"}`,
     `• Interests: ${interests}`,
     `• Availability: ${answers.availability ?? "—"}`,
+    "",
+    "Here is the recommended club/team list:",
   ].join("\n");
 }
 
@@ -147,7 +149,7 @@ export async function POST(req: NextRequest) {
           session.answers.interests.push(text);
           session.messages.push({
             role: "assistant",
-            content: `Added: ${text}\nAnything else? (Or press “Done selecting”)`,
+            content: `Added: ${text}\nAnything else? Or press “Done selecting”`,
           });
         } else {
           session.messages.push({
