@@ -150,13 +150,13 @@ export default function Home() {
           {/* Pathways Filter Buttons */}
           <div className="flex gap-4 mb-6">
             <PathwaysButton
-              label="Women"
+              label="WOMEN"
               imageSrc={womenPathwayImg.src}
               isActive={activeFilters.women}
               onToggle={() => toggleFilter("women")}
             />
             <PathwaysButton
-              label="Men"
+              label="MEN"
               imageSrc={menPathwayImg.src}
               isActive={activeFilters.men}
               onToggle={() => toggleFilter("men")}

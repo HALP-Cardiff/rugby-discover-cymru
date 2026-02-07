@@ -31,7 +31,7 @@ export default function PathwaysButton({
                 }`}
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="button-label text-lg font-semibold text-white bg-black bg-opacity-50 px-3 py-1 rounded">
+              <span className="button-label text-lg font-semibold text-white bg-black bg-opacity-50 px-3 py-1 rounded" style={{ fontFamily: 'var(--font-choplin)' }}>
                 {label}
               </span>
             </div>
