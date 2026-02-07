@@ -40,10 +40,6 @@ interface Organization {
   LogoUrl: string | null;
 }
 
-interface PathwaysFilterState {
-  [key: string]: boolean;
-}
-
 interface FilterOptions {
   sexes: { Id: number; Value: string }[];
   gameFormats: { Id: number; Value: string }[];
@@ -55,21 +51,9 @@ const LOGO_BASE_URL = "https://public.wru.wales/organisation/logos/";
 // ── Component ────────────────────────────────────────────────────────────
 export default function Home() {
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
-  const [activeFilters, setActiveFilters] = useState<PathwaysFilterState>({
-    women: false,
-    men: false,
-    kids: false,
-  });
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const toggleFilter = (filterName: string) => {
-    setActiveFilters(prev => ({
-      ...prev,
-      [filterName]: !prev[filterName]
-    }));
-  };
 
   // Filter options (loaded once)
   const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(
@@ -144,25 +128,38 @@ export default function Home() {
   const hasActiveFilters =
     selectedSex || selectedGameFormat || selectedOrgType || minAge || maxAge;
 
+  // ── Pathway button toggle (drives the sex filter) ─────────────────
+  const getSexId = (sexValue: string): string => {
+    const sexOption = filterOptions?.sexes.find(
+      (s) => s.Value.toLowerCase() === sexValue.toLowerCase()
+    );
+    return sexOption ? String(sexOption.Id) : "";
+  };
+
+  const handlePathwayToggle = (sexValue: string) => {
+    const sexId = getSexId(sexValue);
+    setSelectedSex((prev) => (prev === sexId ? "" : sexId));
+  };
+
   // ── Render ───────────────────────────────────────────────────────────
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans">
       <Header />
       <main className="flex flex-1 w-full flex-col items-start justify-start py-5 px-16 bg-white">
         <div className="flex flex-col items-start w-full max-w-5xl">
-          {/* Pathways Filter Buttons */}
+          {/* Pathways Filter Buttons (sex filter) */}
           <div className="flex gap-4 mb-6">
             <PathwaysButton
               label="WOMEN"
               imageSrc={womenPathwayImg.src}
-              isActive={activeFilters.women}
-              onToggle={() => toggleFilter("women")}
+              isActive={selectedSex === getSexId("Female")}
+              onToggle={() => handlePathwayToggle("Female")}
             />
             <PathwaysButton
               label="MEN"
               imageSrc={menPathwayImg.src}
-              isActive={activeFilters.men}
-              onToggle={() => toggleFilter("men")}
+              isActive={selectedSex === getSexId("Male")}
+              onToggle={() => handlePathwayToggle("Male")}
             />
           </div>
 
@@ -183,25 +180,6 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Sex */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Sex
-                </label>
-                <select
-                  value={selectedSex}
-                  onChange={(e) => setSelectedSex(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                >
-                  <option value="">All</option>
-                  {filterOptions?.sexes.map((s) => (
-                    <option key={s.Id} value={s.Id}>
-                      {s.Value}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Game Format */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
