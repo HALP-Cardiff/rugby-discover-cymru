@@ -57,7 +57,7 @@ export default function Home() {
       <Header />
       <main className="flex flex-1 w-full flex-col items-start justify-start px-16 bg-white">
         <div className="flex flex-col items-start max-w-3xl w-full">
-          <div className="mb-8"></div>
+          <div className="mb-8">
             <h1 className="text-5xl font-bold text-gray-900 mb-1">
               Discover Welsh Rugby
             </h1>
@@ -139,7 +139,6 @@ export default function Home() {
                   )}
                 </div>
               )}
-            </div>
 
             <div className="w-64 bg-gray-200 p-4 rounded-lg h-fit">
               <h2 className="text-lg font-semibold text-gray-700">Filters</h2>
