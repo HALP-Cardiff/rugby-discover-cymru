@@ -148,6 +148,16 @@ export default function Home() {
       <Header />
       <Chatbot />
       <main className="flex flex-1 w-full flex-col items-start justify-start py-5 px-16 bg-white">
+        <div className="mb-6 w-full" style={{ backgroundImage: "url('/cover.jpg')" }}>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2 mt-75">
+            Discover Rugby in Wales
+          </h1>
+          <p className="text-gray-600">
+            Find rugby clubs, teams, and organizations across Wales. Filter by
+            location, age group, game format, and more to find the perfect fit
+            for you.
+          </p>
+        </div>
         <div className="flex flex-col items-start w-full max-w-5xl">
           {/* Pathways Filter Buttons (sex filter) */}
           <div className="flex gap-4 mb-6">
