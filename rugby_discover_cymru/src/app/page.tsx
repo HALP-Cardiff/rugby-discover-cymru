@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Header from "./components/Header";
+import PathwaysButton from "./components/PathwaysButton";
+
+// import images for the pathways buttons
+import womenPathwayImg from '../../public/womens_thumbnail.jpg'
+import menPathwayImg from '../../public/mens_thumbnail.jpeg'
 import "./globals.css";
 import Footer from "./components/Footer";
 
@@ -24,11 +29,27 @@ interface Organization {
   MaxAge: number;
 }
 
+interface PathwaysFilterState {
+  [key: string]: boolean;
+}
+
 export default function Home() {
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [activeFilters, setActiveFilters] = useState<PathwaysFilterState>({
+    women: false,
+    men: false,
+    kids: false,
+  });
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const toggleFilter = (filterName: string) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      [filterName]: !prev[filterName]
+    }));
+  };
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -56,40 +77,51 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans">
       <Header />
-      <main className="flex flex-1 w-full flex-col items-start justify-start px-16 bg-white">
-        <div className="mb-8">
-          <h1 className="text-5xl font-bold text-gray-900 mb-1 mt-10">
-            Discover Welsh Rugby
-          </h1>
-        </div>
-        <div className="flex gap-6 w-full">
-          <div className="flex flex-col flex-1">
-            {/* View Toggle Buttons */}
-            <div className="flex gap-4 mb-6">
-              <button
-                onClick={() => setViewMode("map")}
-                className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
-                  viewMode === "map"
-                    ? "bg-red-600 text-white"
-                    : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-                }`}
-              >
-                Map
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
-                  viewMode === "list"
-                    ? "bg-red-600 text-white"
-                    : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-                }`}
-              >
-                List
-              </button>
-            </div>
+      <main className="flex flex-1 w-full flex-col items-start justify-start py-32 px-16 bg-white">
+        <div className="flex flex-col items-start max-w-3xl w-full">
+          {/* Pathways Filter Buttons */}
+          <div className="flex gap-4 mb-6">
+            <PathwaysButton
+              label="Women"
+              imageSrc={womenPathwayImg.src}
+              isActive={activeFilters.women}
+              onToggle={() => toggleFilter("women")}
+            />
+            <PathwaysButton
+              label="Men"
+              imageSrc={menPathwayImg.src}
+              isActive={activeFilters.men}
+              onToggle={() => toggleFilter("men")}
+            />
+          </div>
+
+          {/* View Toggle Buttons Zone */}
+
+          <div className="flex gap-4 mb-6">
+            <button
+              onClick={() => setViewMode("map")}
+              className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+                viewMode === "map"
+                  ? "bg-red-600 text-white"
+                  : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+              }`}
+            >
+              Map
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+                viewMode === "list"
+                  ? "bg-red-600 text-white"
+                  : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+              }`}
+            >
+              List
+            </button>
+          </div>
 
             {viewMode === "map" && (
-              <div className="w-175" style={{ minHeight: "500px", height: "65vh" }}>
+              <div className="w-full" style={{ minHeight: "500px", height: "65vh" }}>
                 {loading ? (
                   <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
                     Loading organizations...
@@ -109,7 +141,7 @@ export default function Home() {
             )}
 
             {viewMode === "list" && (
-              <div className="w-175 h-96 overflow-y-auto">
+              <div className="w-full h-96 overflow-y-auto">
                 {loading ? (
                   <div className="text-center text-gray-600">
                     Loading organizations...
@@ -146,7 +178,6 @@ export default function Home() {
           <div className="w-64 bg-gray-200 p-4 rounded-lg h-fit">
             <h2 className="text-lg font-semibold text-gray-700">Filters</h2>
           </div>
-        </div>
       </main>
       <Footer />
     </div>
