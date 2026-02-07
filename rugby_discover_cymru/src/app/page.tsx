@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Header from "./components/Header";
 
 const MapComponent = dynamic(() => import("@/components/MapComponent"), {
   ssr: false,
@@ -53,14 +54,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans">
-      <header
-        className="w-full py-12 px-16 shadow-lg"
-        style={{ backgroundColor: "rgb(238, 53, 36)" }}
-      >
-        <h1 className="text-4xl font-bold text-white">
-          Welcome to the WRU Discovery Tool
-        </h1>
-      </header>
+      <Header />
       <main className="flex flex-1 w-full flex-col items-center justify-center py-32 px-16 bg-white">
         <div className="flex flex-col items-center justify-center max-w-3xl w-full">
           {/* View Toggle Buttons */}
