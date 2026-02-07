@@ -350,7 +350,7 @@ export default function Home() {
                       key={`${org.OrganisationId}-${org.TeamTemplateId}-${index}`}
                       href={`/org/${org.OrganisationId}`}
                     >
-                      <div className="p-4 bg-gray-100 rounded-lg border border-gray-300 hover:bg-gray-200 cursor-pointer transition-colors">
+                      <div className="p-4 bg-gray-100 rounded-lg border border-gray-300 hover:bg-gray-200 cursor-pointer transition-colors mb-2">
                         <p className="font-semibold text-gray-800">
                           {org.OrganisationName}
                         </p>
