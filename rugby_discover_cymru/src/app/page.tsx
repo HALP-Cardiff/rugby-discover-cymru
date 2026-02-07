@@ -35,16 +35,14 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Map View */}
           {viewMode === "map" && (
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-center h-[450px]">
               <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d19877.117945940747!2d-3.1570815999999997!3d51.48312669999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1770461600485!5m2!1sen!2suk" width="600" height="450" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
             </div>
           )}
 
-          {/* List View */}
           {viewMode === "list" && (
-            <div className="w-full">
+            <div className="w-full h-[450px] overflow-y-auto">
               <div className="space-y-3">
                 <div className="p-4 bg-gray-100 rounded-lg border border-gray-300">
                   <p className="font-semibold text-gray-800">Rugby Club 1</p>
