@@ -4,6 +4,7 @@ import { getPool } from "@/lib/db";
 const QUERY = `SELECT 
   o.Id, 
   o.Name AS OrganisationName, 
+  o.LogoUrl,
   tt.Name AS TeamTemplateName, 
   tt.MinAge, 
   tt.MaxAge 

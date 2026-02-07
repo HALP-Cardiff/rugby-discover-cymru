@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "./components/Header";
 import PathwaysButton from "./components/PathwaysButton";
 
@@ -48,6 +49,8 @@ interface FilterOptions {
   gameFormats: { Id: number; Value: string }[];
   organisationTypes: { Id: number; Name: string; Description: string }[];
 }
+
+const LOGO_BASE_URL = "https://public.wru.wales/organisation/logos/";
 
 // ── Component ────────────────────────────────────────────────────────────
 export default function Home() {
@@ -350,29 +353,44 @@ export default function Home() {
                       key={`${org.OrganisationId}-${org.TeamTemplateId}-${index}`}
                       href={`/org/${org.OrganisationId}`}
                     >
-                      <div className="p-4 bg-gray-100 rounded-lg border border-gray-300 hover:bg-gray-200 cursor-pointer transition-colors mb-2">
-                        <p className="font-semibold text-gray-800">
-                          {org.OrganisationName}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          Team: {org.TeamTemplateName}
-                        </p>
-                        <div className="flex flex-wrap gap-3 mt-1">
-                          <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-                            Ages {org.MinAge}–{org.MaxAge}
-                          </span>
-                          {org.Sex && (
-                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
-                              {org.Sex}
+                      <div className="flex items-center gap-4 p-4 bg-gray-100 rounded-lg border border-gray-300 hover:bg-gray-200 cursor-pointer transition-colors mb-2">
+                        {/* Organisation details */}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-gray-800">
+                            {org.OrganisationName}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Team: {org.TeamTemplateName}
+                          </p>
+                          <div className="flex flex-wrap gap-3 mt-1">
+                            <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+                              Ages {org.MinAge}–{org.MaxAge}
                             </span>
-                          )}
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                            {org.GameFormat}
-                          </span>
-                          <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">
-                            {org.OrganisationType}
-                          </span>
+                            {org.Sex && (
+                              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                                {org.Sex}
+                              </span>
+                            )}
+                            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                              {org.GameFormat}
+                            </span>
+                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">
+                              {org.OrganisationType}
+                            </span>
+                          </div>
                         </div>
+                        {/* Organisation logo on the right */}
+                        {org.LogoUrl && (
+                          <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden border border-gray-200 bg-white">
+                            <Image
+                              src={`${LOGO_BASE_URL}${org.LogoUrl}`}
+                              alt={`${org.OrganisationName} logo`}
+                              fill
+                              className="object-contain p-1"
+                              unoptimized
+                            />
+                          </div>
+                        )}
                       </div>
                     </Link>
                   ))}
