@@ -11,12 +11,10 @@ BEGIN
     Id              INT IDENTITY(1,1) PRIMARY KEY,
     OrganisationId  INT           NOT NULL,
     ReviewerName    NVARCHAR(100) NOT NULL,
-    Rating          INT           NOT NULL CHECK (Rating >= 1 AND Rating <= 5),
+    Rating          INT           NOT NULL,
     Title           NVARCHAR(200) NOT NULL,
     ReviewText      NVARCHAR(MAX) NOT NULL,
-    CreatedAt       DATETIME2     NOT NULL DEFAULT GETUTCDATE(),
-    CONSTRAINT FK_Review_Organisation FOREIGN KEY (OrganisationId)
-      REFERENCES dbo.Organisation_team4 (Id)
+    CreatedAt       DATETIME2     NOT NULL DEFAULT GETUTCDATE()
   );
 END;
 GO
