@@ -86,27 +86,25 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="flex gap-6 w-full">
-            <div className="flex-1">
-              {viewMode === "map" && (
-                <div className="w-full flex flex-col items-start h-96">
-                  {loading ? (
-                    <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
-                      Loading organizations...
-                    </div>
-                  ) : error ? (
-                    <div className="w-full h-96 bg-red-100 rounded-lg flex items-center justify-center text-red-700">
-                      {error}
-                    </div>
-                  ) : organizations.length === 0 ? (
-                    <div className="w-full h-96 bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-700">
-                      No organizations found with location data
-                    </div>
-                  ) : (
-                    <MapComponent organizations={organizations} />
-                  )}
+          {viewMode === "map" && (
+            <div className="w-full" style={{ minHeight: "500px", height: "65vh" }}>
+              {loading ? (
+                <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                  Loading organizations...
                 </div>
+              ) : error ? (
+                <div className="w-full h-full bg-red-100 rounded-lg flex items-center justify-center text-red-700">
+                  {error}
+                </div>
+              ) : organizations.length === 0 ? (
+                <div className="w-full h-full bg-yellow-100 rounded-lg flex items-center justify-center text-yellow-700">
+                  No organizations found with location data
+                </div>
+              ) : (
+                <MapComponent organizations={organizations} />
               )}
+            </div>
+          )}
 
               {viewMode === "list" && (
                 <div className="w-full h-96 overflow-y-auto">
