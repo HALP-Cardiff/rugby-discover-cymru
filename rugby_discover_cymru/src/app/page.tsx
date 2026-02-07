@@ -147,17 +147,33 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans">
       <Header />
       <Chatbot />
-      <main className="flex flex-1 w-full flex-col items-start justify-start py-5 px-16 bg-white">
-        <div className="mb-6 w-full" style={{ backgroundImage: "url('/cover.jpg')" }}>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2 mt-75">
+      
+      {/* Hero Section - Full Width */}
+      <div 
+        className="w-full relative h-80 flex items-center justify-center mb-5"
+        style={{ 
+          backgroundImage: "url('/cover.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+      >
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
+        
+        {/* Text content */}
+        <div className="relative z-10 text-center px-4">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Discover Rugby in Wales
           </h1>
-          <p className="text-gray-600">
+          <p className="text-lg text-white">
             Find rugby clubs, teams, and organizations across Wales. Filter by
             location, age group, game format, and more to find the perfect fit
             for you.
           </p>
         </div>
+      </div>
+
+      <main className="flex flex-1 w-full flex-col items-start justify-start px-16 bg-white">
         <div className="flex flex-col items-start w-full max-w-5xl">
           {/* Pathways Filter Buttons (sex filter) */}
           <div className="flex gap-4 mb-6">
